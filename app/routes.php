@@ -20,18 +20,18 @@ Route::get("upload", function(){
 	return View::make("upload");
 });
 Route::post("upload", function(){
-	$file = input::file("photo");
+	$file = Input::file("photo");
 	$dataUpload = array(
-		"username" => input::get("username"),
-		"email" => input::get("email"),
-		"password" => input::get("password"),
+		"username" => Input::get("username"),
+		"email" => Input::get("email"),
+		"password" => Input::get("password"),
 		"photo" => $file//campo foto para validar
 	);
 
 		$rules = array(
 		  'username' =>'required|min:2|max:100',
 		  'email' => 'required|email|min:6|max:100|unique:users',
-		  'password' => 'required|confirme|min:6|max:100',
+		  'password' => 'required|confirmed|min:6|max:100',
 		  'photo' => 'required'
 		);
 
@@ -41,18 +41,20 @@ Route::post("upload", function(){
 		  'email' => 'El campo :attribute debe ser un email valido.',
 		  'max' => 'El campo :attribute nopuede tener mas de :min carácteres.',
 		  'unique' => 'El email ingresado ya está registrado en el blog',
-		  'confirmned' => 'Los password no coiciden'
+		  'confirmed' => 'Los password no coiciden'
 		);
-
+		$validation = Validator::make(Input::all(), $rules, $messages);
+		//si la validacion falla redirigimos al formulario de registro con los errores
+		//y con los campos que nos habia llenado el usuario
 		if($validation->fails())
 		{
 			return Redirect::to('upload')->withErrors($validation)->withInput();
 		}else{
 			$user = new User(array(
-				"username" => input::get("username"),
-				"email" => input::get("email"),
-				"password" => Hash::make(input::get("password")),
-				"photo" => input::file("photo")->getClientOriginalName()//nombre original de la foto
+				"username" => Input::get("username"),
+				"email" => Input::get("email"),
+				"password" => Hash::make(Input::get("password")),
+				"photo" => Input::file("photo")->getClientOriginalName()//nombre original de la foto
 			));
 			if($user->save()){
 				//guardamos la imagen en public/imgs con el nombre original

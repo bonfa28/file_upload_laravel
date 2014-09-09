@@ -11,10 +11,10 @@
 	<div class="row">
 		<h1 class="subheader">Subir imágenes con laravel 4</h1>
 		<!-- si el formulario contiene errores de validación-->
-		@if($errores->has())
+		@if($errors->has())
 		 <div class="alert-box alert">
 		   <!-- recorremos los errores en un loop y los mostramos-->
-		   @foreach($errores->all('<p>:message</p>') as $message)
+		   @foreach($errors->all('<p>:message</p>') as $message)
 			  {{$message}}
 		   @endforeach	
 		 </div>
@@ -26,17 +26,18 @@
 		 </div>	
 		@endif
 		<div class="form">
-		  {{Form::open(array('url'=>'upload', files=>true))}}
+		  {{Form::open(array('url'=>'upload', 'files'=>true))}}
 		  {{Form::label('photo', 'Foto')}}
 
 		  <!-- asi se crea un campo file en laravel -->
-		  {{From::file('photo')}}
-		  {{Form::label('email', Email)}}
-		  {{Form::email('email', input::old('email'))}}
-		  {{Form::label('username', Username)}}
-		  {{Form::text('username', input::old('username'))}}
-		  {{Form::label('password', Password)}}
+		  {{Form::file('photo')}}
+		  {{Form::label('email', 'Email')}}
+		  {{Form::email('email', Input::old('email'))}}
+		  {{Form::label('username', 'Nickname')}}
+		  {{Form::text('username', Input::old('username'))}}
+		  {{Form::label('password', 'Contraseña')}}
 		  {{Form::password('password')}}
+		  {{Form::label('password_confirmation', 'Confirmar contraseña')}}
 		  {{Form::password('password_confirmation')}}
 
 		  <br/>
